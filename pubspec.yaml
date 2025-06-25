@@ -34,8 +34,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-
-dev_dependencies:
+  ticket_widget: ^1.0.2
+  toggle_switch: ^2.3.0
+  scroll_navigation: ^1.3.2
+  awesome_navigation_bar: ^1.0.4
+  sort_pubspec_dependencies: ^0.0.1
   flutter_test:
     sdk: flutter
 
@@ -51,11 +54,27 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - img/button_one.png
+    - img/welcome_one.jpg
+    - img/welcome_two.png
+    - img/welcome_three.png
+    - img/welcome_three.png
+    - img/welcome_three.png
+    - img/nav_three.png
+    - img/mountain_slideone.jpeg
+    - img/mountain_two.jpeg
+    - img/rr.jpg
+    - img/ballon.png
+    - img/hiking.png
+    - img/kayaking.png
+    - img/snorking.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+   
 
   # To add assets to your application, add an assets section, like this:
   # assets:
