@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app3/widget/app_text.dart';
 
 class AppButtons extends StatelessWidget {
   final Color  color;
@@ -7,15 +8,15 @@ class AppButtons extends StatelessWidget {
   String?      text;
   IconData?    icon;
   bool?        isIcon;
-  double size;
-  AppButtons({Key? key,
+  final double size;
+  AppButtons({super.key,
   this.isIcon=false,
   this.text,
   this.icon,
   required this.size,
   required this.color,
   required this .backgroundColor, 
-  required this.borderColor}) : super(key: key);
+  required this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,12 @@ class AppButtons extends StatelessWidget {
             border:Border.all(
               color:borderColor,
               width: 1.0 ),
+              
          borderRadius: BorderRadius.circular(10),
         color:backgroundColor
+        
         ),
-        // child:Container(
-        //   AppText(),
-        // ) ,
+        child: isIcon == false? Center(child: AppText(text: text!, color: color)) : Center(child: Icon(icon, color: color)),
    );
 }
 }

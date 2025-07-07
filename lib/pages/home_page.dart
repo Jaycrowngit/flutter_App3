@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app3/cubit/app_cubit.dart';
+import 'package:my_app3/cubit/app_cubit_state.dart';
 import 'package:my_app3/widget/app_large_text.dart';
 import 'package:my_app3/widget/app_text.dart';
 
@@ -12,11 +15,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
 
-  Map<String, String> images = {
-    "ballon.png": "Ballon",
+  var images = {
+    "ballon.png" : "Ballon",
     "kayaking.png": "Kayaking",
     "hiking.png": "Hiking",
-    "snorking.png": "Snorking"
+    "snorking.png": "Snorking",
   };
 
   @override
@@ -34,21 +37,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:SingleChildScrollView(
-         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: BlocBuilder<AppCubits, CubitStates>(
+  builder: (context, state) {
+     if (state is LoadedState) {
+      var info = state.places;
+      return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children:  [
             // Menu & Avatar
             Container(
-              padding: const EdgeInsets.only(top: 70, left: 20),
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, left: 20),
+
               child: Row(
                 children: [
                   const Icon(Icons.menu, size: 30, color: Colors.black54),
                   const Spacer(),
                   Container(
                     margin: const EdgeInsets.only(right: 20),
-                    width: 50,
-                    height: 50,
+                    width: 60,
+                    height: 60,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey.withOpacity(0.5),
@@ -88,19 +96,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 controller: _tabController,
                 children: [
                   ListView.builder(
-                    itemCount: 3,
+                    itemCount: info.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: const EdgeInsets.only(right: 15, top: 10),
-                        width: 200,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          image: const DecorationImage(
-                            image: AssetImage("img/mountain_slideone.jpeg"),
-                            fit: BoxFit.cover,
+                      return GestureDetector(
+                        
+                    onTap: () {
+                      BlocProvider.of<AppCubits>(context).detailPage(info[index]);
+                    },
+                    child: Container(
+                          margin: const EdgeInsets.only(right: 15, top: 10),
+                          width: 200,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            image: DecorationImage(
+                              image:NetworkImage("http://mark.bslmeiyu.com/uploads/${info[index].img ?? 'default.jpg'}"),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       );
@@ -137,7 +151,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   String imageLabel = images.values.elementAt(index);
          
                   return Container(
-                    margin: const EdgeInsets.only(right: 30),
+                    margin: const EdgeInsets.only(right: 35),
                     child: Column(
                       children: [
                         Container(
@@ -146,7 +160,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             image: DecorationImage(
-                              image: AssetImage("img/$imagePath"),
+                              image: AssetImage("assets/img/$imagePath"),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -165,11 +179,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ],
                ),
-       ),
+       );
+      
+     } else {
+      return const Center(child: Text("Something went wrong"));
+     }
+  }
+  
+    ),
     );
   }
 }
-
 class CircleTabIndicator extends Decoration {
   final Color color;
   final double radius;

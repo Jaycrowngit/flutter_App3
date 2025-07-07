@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app3/cubit/app_cubit.dart';
+import 'package:my_app3/cubit/app_cubit_state.dart';
 import 'package:my_app3/widget/app_large_text.dart';
 import 'package:my_app3/widget/app_text.dart';
+import 'package:my_app3/widget/responsive_button.dart';
+
 
 import '../widget/app_button.dart' show AppButtons;
 
@@ -13,9 +18,13 @@ class DetailPage extends StatefulWidget {
 
 class  _DetailPageState extends State <DetailPage> {
   int gottenStars=4;
+  int selectedIndex=-1;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocBuilder<AppCubits, CubitStates>(
+      builder: (context, state){
+        DetailState detail = state as DetailState;
+        return Scaffold(
       body:Container(
         width: double.maxFinite,
         height: double.maxFinite,
@@ -29,7 +38,7 @@ class  _DetailPageState extends State <DetailPage> {
                   height: 350,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("img/mountain_slideone.jpeg"),
+                      image:NetworkImage("http://mark.bslmeiyu.com/uploads/"+detail.places.img),
                       fit: BoxFit.fill,
                       )
                       ),
@@ -41,7 +50,9 @@ class  _DetailPageState extends State <DetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.menu, color: Colors.black)),
+                    IconButton(onPressed: () {
+                      BlocProvider.of<AppCubits>(context).GoHome();
+                    }, icon: Icon(Icons.menu, color: Colors.black)),
                     IconButton(onPressed: () {}, icon: Icon(Icons.more_vert, color: Colors.black)),
                   ],
                   ),
@@ -77,7 +88,7 @@ class  _DetailPageState extends State <DetailPage> {
                       AppText(text: "USA, California", color:Colors.black38, size:13),
                     ],
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 9,),
                   Row(
                     children: [
                       Wrap(
@@ -89,28 +100,70 @@ class  _DetailPageState extends State <DetailPage> {
                   AppText(text: "(4.0)", color: Colors.black38),
                     ],
                   ),
-                  SizedBox(height: 24,),
-                  AppLargeText(text: "People", size:20),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 12,),
+                  AppLargeText(text: "People", size:22),
+                  SizedBox(height: 3,),
                   AppText(text: "Number of people in your group", color:Colors.black45),
+                  SizedBox(height:10),
                   Wrap(
-                     
                     children: List.generate(5, ( index) {
-                     return AppButtons(
-                     size: 45, 
-                     color: Colors.black,
-                    backgroundColor: const Color.fromARGB(213, 239, 9, 9),
-                    borderColor:  const Color.fromARGB(107, 158, 158, 158)
-                    );
+                     return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                        },
+                       child: Container(
+                        margin: const EdgeInsets.only(right: 4),
+                         child: AppButtons(
+                         size: 42, 
+                         color: selectedIndex==index?Colors.white:Colors.black,
+                        backgroundColor:  selectedIndex==index?Colors.black:const Color.fromARGB(123, 158, 158, 158),
+                        borderColor:  selectedIndex==index?Colors.black:Colors.grey,
+                        text:(index+1).toString(),
+                        ),
+                       ),
+                     );
                     })
                   ),
+                  SizedBox(height: 15,),
+                  AppLargeText(text: "Description", size:22),
+                  SizedBox(height: 7,),
+                  AppText(text: "Yosemite National Park is a globally renowned natural landmark in California's Sierra Nevada mountains, celebrated for its stunning granite cliffs, waterfalls, giant sequoia groves, and diverse ecosystems", color:Colors.black45, size: 14,),
                    ],
                   ),
-                ),
-                )
-          ],
+          ),
+            ),
+            Positioned(
+              bottom: 20,
+              left:20,
+              right: 20,
+              child:Row(
+                 children: [
+                   AppButtons(
+                   size: 55,
+                   color: Colors.black45, 
+                   backgroundColor: Colors.white, 
+                   borderColor: Colors.black45,
+                   isIcon: true,
+                   icon: Icons.favorite_border_sharp,
+                   ),
+                   SizedBox(width:8),
+                   ResponsiveButton(
+                    isResponsive: true,
+                    
+                   )
+                 ],
+              ),)
+             ]
         ),
-      ),
+        
+     ),
+     
+     );
+    }  
     );
   }
 }
+
+  
